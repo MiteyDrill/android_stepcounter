@@ -10,7 +10,7 @@ import android.widget.Toast;
 
 /*Manages step changes*/
 
-public class StepActivity extends Activity implements SensorEventListener {
+public class StepActivity extends MainActivity implements SensorEventListener {
 
     private long steps;
 
@@ -40,7 +40,7 @@ public class StepActivity extends Activity implements SensorEventListener {
         if (sensor.getType() == Sensor.TYPE_STEP_DETECTOR) {
             steps++;
 
-//            Toast.makeText(this, Long.toString(steps), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, Long.toString(steps), Toast.LENGTH_SHORT).show();
         }
 
 

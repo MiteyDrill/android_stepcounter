@@ -7,8 +7,8 @@
     tools:context=".MainActivity">
 
     <TextView
-        android:id="@+id/num_coutner"
-        android:layout_width="wrap_content"
+        android:id="@+id/num_counter"
+        android:layout_width="13dp"
         android:layout_height="wrap_content"
         android:text="0"
         android:textSize="30sp"
