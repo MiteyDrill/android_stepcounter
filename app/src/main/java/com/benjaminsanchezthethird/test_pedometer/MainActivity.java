@@ -11,6 +11,19 @@ import android.os.Bundle;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.components.AxisBase;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.formatter.DefaultValueFormatter;
+import com.github.mikephil.charting.formatter.IAxisValueFormatter;
+import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener {
@@ -23,6 +36,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     SensorManager sensorManager;
     Sensor sSensor;
+
+    BarChart progress_chart;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +54,43 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         cal_view = (TextView) findViewById(R.id.num_calories);
         mile_view = (TextView) findViewById(R.id.num_miles);
 
+        progress_chart = (BarChart) findViewById(R.id.bar_view);
+
         //Todo: If data found in save then set text to that data
+
+        ArrayList<BarEntry> barEntries = new ArrayList<>();
+
+        barEntries.add(new BarEntry(0, 355f));
+        barEntries.add(new BarEntry(1, 0f));
+        barEntries.add(new BarEntry(2, 4000f));
+        barEntries.add(new BarEntry(3, 2113f));
+        barEntries.add(new BarEntry(4, 1112f));
+        barEntries.add(new BarEntry(5, 6135f));
+        barEntries.add(new BarEntry(6, 4113f));
+
+        BarDataSet barDataSet = new BarDataSet(barEntries, "Total Steps");
+
+        final String[] days = new String[] {"Su", "Mo", "Th", "We", "Th", "Fr", "Sa"};
+
+        XAxis xAxis = progress_chart.getXAxis(); //grabs y-axis from charg
+
+        //sets x-axis values through the IAxisValueFormatter class
+        xAxis.setValueFormatter(new IAxisValueFormatter() {
+            @Override
+            public String getFormattedValue(float value, AxisBase axis) {
+                return days[(int) value];
+            }
+        });
+
+
+
+        BarData theData = new BarData(barDataSet);
+
+        progress_chart.setData(theData);
+
+
+
+
 
     }
 
@@ -88,6 +139,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             step_view.setText(s); //sets step text
             cal_view.setText(c); //sets calorie text
             mile_view.setText(m); //sets miles text
+
+            BarData data = progress_chart.getData();
+
+            IBarDataSet dataSetByIndex = data.getDataSetByIndex(0);
+
+            dataSetByIndex.getEntryForIndex(0).setY((float) steps);
+
+            progress_chart.invalidate(); //refresh chart
         }
 
 
