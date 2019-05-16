@@ -11,6 +11,8 @@ import android.os.Bundle;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.benjaminsanchezthethird.test_pedometer.model.StepEntry;
+import com.benjaminsanchezthethird.test_pedometer.model.StepStorage;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.XAxis;
@@ -23,12 +25,15 @@ import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener {
 
     private long steps;
+
+    private StepStorage storage;
 
     TextView step_view;
     TextView cal_view;
@@ -46,6 +51,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         /*variables*/
         steps = 0;
+        storage = new StepStorage();
+        storage.addEntry((float) steps);
+
+
 
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         sSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
@@ -125,7 +134,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         if (sensor.getType() == Sensor.TYPE_STEP_DETECTOR) {
             steps++;
-
+            storage.updateEntry(steps);
             //ToDo Create a function that calls updates
             String s = Long.toString(steps);
 //            String c = Float.toString(getCalories(steps));
@@ -144,7 +153,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
             IBarDataSet dataSetByIndex = data.getDataSetByIndex(0);
 
-            dataSetByIndex.getEntryForIndex(0).setY((float) steps);
+            dataSetByIndex.getEntryForIndex(0).setY((float) storage.getTodaysSteps(this));
 
             progress_chart.invalidate(); //refresh chart
         }
